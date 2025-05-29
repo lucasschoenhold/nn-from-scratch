@@ -26,3 +26,15 @@ class SGD(Optimizer):
     def step(self):
         for param in self.params:
             param.data -= self.lr * param.grad
+
+
+class SGDMomentum(Optimizer):
+    def __init__(self, model, lr=0.01, gamma=0.9):
+        super().__init__(model, lr=lr)
+        self.gamma = gamma
+        self.velocity = {p: 0.0 for p in model.parameters()}
+
+    def step(self):
+        for param in self.params:
+            self.velocity[param] = self.gamma * self.velocity[param] + param.grad
+            param.data -= self.lr * self.velocity[param]
